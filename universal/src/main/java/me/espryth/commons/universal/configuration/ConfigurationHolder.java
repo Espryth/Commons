@@ -1,8 +1,5 @@
 package me.espryth.commons.universal.configuration;
 
-import me.espryth.commons.universal.Logger;
-
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
