@@ -10,7 +10,7 @@ public final class ConfigurationHolder {
 
     private final ConfigClass configClass;
     private final Map<String, String[]> headers;
-    private final Map<String, Object> defaultValues;
+    private final Map<String, ConfigValue<?>> defaultValues;
 
     public ConfigurationHolder(ConfigClass configClass) {
         this.configClass = configClass;
@@ -25,20 +25,21 @@ public final class ConfigurationHolder {
     private void getDefaultValues() {
         try {
             for(Field field : configClass.getClass().getDeclaredFields()) {
-                if(field.isAnnotationPresent(Config.class)) {
-                    field.setAccessible(true);
 
-                    Config config = field.getAnnotation(Config.class);
+                field.setAccessible(true);
 
-                    String path = config.path();
-                    Object defaultValue = field.get(configClass);
-
-                    defaultValues.put(path, defaultValue);
-
-                    if(config.desc().length > 0) {
-                        headers.put(path, config.desc());
-                    }
+                if(field.isAnnotationPresent(ConfigIgnore.class)) {
+                    continue;
                 }
+
+                ConfigValue<?> value = (ConfigValue<?>) field.get(configClass);
+
+                if(field.isAnnotationPresent(Comment.class)) {
+                    Comment comment = field.getAnnotation(Comment.class);
+                    headers.put(value.getPath(), comment.value());
+                }
+
+                defaultValues.put(value.getPath(), value);
             }
 
         } catch (IllegalAccessException exception) {
@@ -52,15 +53,19 @@ public final class ConfigurationHolder {
 
         try {
 
-            fileWriter = new FileWriter(configClass.getBase().getFile());
-
-            StringBuilder dataToWrite = new StringBuilder();
+            ConfigurationBase base = configClass.getBase();
+            fileWriter = new FileWriter(base.getFile());
 
             for(String path : defaultValues.keySet()) {
 
-                if(configClass.getBase().get(path) != null) {
-                    continue;
+                if(base.contains(path)) {
+
+                    ConfigValue<?> configValue = defaultValues.get(path);
+                    configValue.setValue(base.get(path));
+
                 }
+
+                StringBuilder dataToWrite = new StringBuilder();
 
                 if(headers.containsKey(path)) {
 
@@ -72,15 +77,16 @@ public final class ConfigurationHolder {
                     }
                 }
 
-                dataToWrite
-                        .append(path)
-                        .append(": ")
-                        .append(defaultValues.get(path))
-                        .append("\n");
-            }
+                fileWriter.write(dataToWrite.toString());
+                fileWriter.flush();
 
-            fileWriter.write(dataToWrite.toString());
-            fileWriter.flush();
+                base.set(path, defaultValues.get(path).getValue());
+                base.save();
+                base.reload();
+
+                System.out.println("COLA");
+
+            }
 
         } catch (IOException exception) {
             exception.printStackTrace();
@@ -88,10 +94,14 @@ public final class ConfigurationHolder {
             if(fileWriter != null) {
                 try {
                     fileWriter.close();
-                } catch(IOException e) {
+                } catch(IOException ignored) {
                 }
             }
         }
-
     }
+
+    public void reload() {
+        writeDefaultValues();
+    }
+
 }

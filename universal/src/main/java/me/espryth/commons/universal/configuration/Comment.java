@@ -7,10 +7,8 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Config {
+public @interface Comment {
 
-    String path();
-
-    String[] desc() default {};
+    String[] value() default {};
 
 }
