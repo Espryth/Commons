@@ -1,7 +1,7 @@
 package me.espryth.commons.universal.loader;
 
 import me.espryth.commons.universal.Logger;
-import me.espryth.commons.universal.container.Container;
+import me.espryth.commons.universal.module.container.Container;
 import team.unnamed.reflect.identity.TypeReference;
 
 import java.lang.reflect.*;
