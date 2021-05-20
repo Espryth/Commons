@@ -18,3 +18,4 @@ universal/target/classes/me/espryth/commons/universal/loader/Named.class
 universal/target/classes/me/espryth/commons/universal/loader/LoaderHolder.class
 universal/target/classes/me/espryth/commons/universal/loader/LoaderHolder$1.class
 universal/target/classes/me/espryth/commons/universal/loader/Loader.class
+universal/target/classes/me/espryth/commons/universal/module/ModuleManager.class

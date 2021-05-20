@@ -1,29 +1,33 @@
 package me.espryth.commons.universal.module;
 
 import me.espryth.commons.universal.module.binder.Binder;
-import me.espryth.commons.universal.module.binder.SimpleBinder;
-import me.espryth.commons.universal.module.container.Container;
-import me.espryth.commons.universal.module.container.SimpleContainer;
+import team.unnamed.reflect.identity.TypeReference;
 
-public abstract class AbstractModule implements Module{
+public abstract class AbstractModule implements Module {
 
-    protected Container container;
     protected Binder binder;
-
-    public AbstractModule() {
-        this.container = new SimpleContainer();
-        this.binder = new SimpleBinder(container);
-    }
 
     protected void install(Module module) {
         module.setBinder(binder);
         module.configure();
     }
 
-    @Override
-    public Container getContainer() {
-        return container;
+    protected <T> void bind(TypeReference<T> type, T value, String identifier) {
+        binder.bind(type, value, identifier);
     }
+
+    protected <T> void bind(TypeReference<T> type, T value) {
+        binder.bind(type, value, Module.DEFAULT);
+    }
+
+    protected <T> void bind(Class<T> type, T value, String identifier) {
+        binder.bind(TypeReference.of(type), value, identifier);
+    }
+
+    protected <T> void bind(Class<T> type, T value) {
+        binder.bind(type, value, Module.DEFAULT);
+    }
+
 
     @Override
     public void setBinder(Binder binder) {
