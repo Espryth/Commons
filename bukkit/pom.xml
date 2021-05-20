@@ -29,7 +29,7 @@
         </dependency>
         <dependency>
             <groupId>me.espryth</groupId>
-            <artifactId>commons-univesal</artifactId>
+            <artifactId>commons-universal</artifactId>
             <version>1.0.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

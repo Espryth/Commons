@@ -60,6 +60,10 @@ public final class ConfigurationHolder {
 
             for(String path : defaultValues.keySet()) {
 
+                if(configClass.getBase().get(path) != null) {
+                    continue;
+                }
+
                 if(headers.containsKey(path)) {
 
                     for(String headerLine : headers.get(path)) {
@@ -79,7 +83,6 @@ public final class ConfigurationHolder {
 
             fileWriter.write(dataToWrite.toString());
             fileWriter.flush();
-            Logger.log(Logger.Level.INFO, "Si");
 
         } catch (IOException exception) {
             exception.printStackTrace();
