@@ -16,9 +16,9 @@ public final class LoaderHolder {
 
     private final Container container;
 
-    private final Map<Loader, List<Method>> loadMethods;
-    private final Map<Loader, List<Method>> enableMethods;
-    private final Map<Loader, List<Method>> disableMethods;
+    private final Map<LoaderClass, List<Method>> loadMethods;
+    private final Map<LoaderClass, List<Method>> enableMethods;
+    private final Map<LoaderClass, List<Method>> disableMethods;
 
     public LoaderHolder(String prefix,
                         Container container) {
@@ -33,7 +33,7 @@ public final class LoaderHolder {
         this("", container);
     }
 
-    public void register(Loader loader) {
+    public void register(LoaderClass loader) {
 
         Class<?> clazz = loader.getClass();
 
@@ -72,9 +72,9 @@ public final class LoaderHolder {
         initMethods(disableMethods);
     }
 
-    private void initMethods(Map<Loader, List<Method>> map) {
+    private void initMethods(Map<LoaderClass, List<Method>> map) {
 
-        for(Loader loader : map.keySet()) {
+        for(LoaderClass loader : map.keySet()) {
 
             List<Method> methods = map.get(loader);
 
