@@ -10,7 +10,6 @@ public  class SimpleContainer implements Container {
 
     private final Map<TypeReference<?>, Map<String, Object>> values;
 
-
     public SimpleContainer() {
         values = new ConcurrentHashMap<>();
     }

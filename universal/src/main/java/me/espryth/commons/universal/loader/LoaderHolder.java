@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 public final class LoaderHolder {
 
@@ -39,17 +38,14 @@ public final class LoaderHolder {
         Class<?> clazz = loader.getClass();
 
         for(Method method : clazz.getDeclaredMethods()) {
-
             if(method.isAnnotationPresent(Register.class)) {
 
                 Register register = method.getAnnotation(Register.class);
 
                 switch (register.type()) {
                     case LOAD:
-
                         loadMethods.computeIfAbsent(loader, k -> new ArrayList<>());
                         loadMethods.get(loader).add(method);
-
                         break;
                     case ENABLE:
                         enableMethods.computeIfAbsent(loader, k -> new ArrayList<>());
@@ -83,12 +79,9 @@ public final class LoaderHolder {
             List<Method> methods = map.get(loader);
 
             methods.sort((method1, method2) -> {
-
                 Register register1 = method1.getAnnotation(Register.class);
                 Register register2 = method2.getAnnotation(Register.class);
-
                 return Integer.compare(register1.priority(), register2.priority());
-
             });
 
             for(Method method : methods) {
@@ -96,7 +89,7 @@ public final class LoaderHolder {
                 Register register = method.getAnnotation(Register.class);
 
                 if(!register.message().isEmpty()) {
-                    Logger.log(prefix + register.message(), Level.INFO);
+                    Logger.log(Logger.Level.INFO, prefix, register.message());
                 }
 
                 Object[] args = new Object[method.getParameters().length];
@@ -104,9 +97,7 @@ public final class LoaderHolder {
                 for(int i = 0; i < method.getParameters().length; i++) {
 
                     Parameter parameter = method.getParameters()[i];
-
                     Type type = parameter.getParameterizedType();
-
                     TypeReference<?> typeReference;
 
                     if(type instanceof ParameterizedType) {
