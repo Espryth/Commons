@@ -51,10 +51,11 @@ public final class ConfigurationHolder {
 
     private void writeDefaultValues() {
 
+        FileWriter fileWriter = null;
+
         try {
 
-            File file = configClass.getBase().getFile();
-            FileWriter fileWriter = new FileWriter(file);
+            fileWriter = new FileWriter(configClass.getBase().getFile());
 
             StringBuilder dataToWrite = new StringBuilder();
 
@@ -86,6 +87,13 @@ public final class ConfigurationHolder {
 
         } catch (IOException exception) {
             exception.printStackTrace();
+        } finally {
+            if(fileWriter != null) {
+                try {
+                    fileWriter.close();
+                } catch(IOException e) {
+                }
+            }
         }
 
     }
